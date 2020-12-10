@@ -1,49 +1,83 @@
-const fs = require("fs");
+const evh = require("express-vhost");
+const express = require("express");
+const exphbs = require("hbs");
+const path = require("path");
 const http = require("http");
 const https = require("https");
-const express = require("express");
-const serveIndex = require("serve-index");
+const fs = require("fs");
+const tls = require("tls");
+const bodyParser = require("body-parser");
+const expressValidator = require("express-validator");
+const expressSession = require("express-session");
+
+// CONFIGS
 const app = express();
-const morgan = require("morgan");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+//app.use(expressValidator());
+app.use( 
+  expressSession({ secret: "max", saveUninitialized: false, resave: false })
+);
+exphbs.registerPartials(path.join(__dirname, "/projects/partials"));
 
-const privateKey = fs.readFileSync("certs/server.key", "utf8");
-const certificate = fs.readFileSync("certs/server.cert", "utf8");
+const httpPort = 2000;
+const httpsPort = 2001;
 
-const vhost = (hostname, app) => (req, res, next) => {
-  const host = req.headers.host.split(":")[0];
-
-  hostname = new RegExp(hostname);
-
-  if (hostname.test(host)) {
-    return app(req, res, next);
-  } else {
-    next();
-  }
+const secondContext = tls.createSecureContext({
+  key: fs.readFileSync("certs/clubwerchow.key", "utf8"),
+  cert: fs.readFileSync("certs/clubwerchow.cert", "utf8"),
+});
+const options = {
+  key: fs.readFileSync("certs/werchow.key", "utf8"),
+  cert: fs.readFileSync("certs/werchow.cert", "utf8"),
+  SNICallback: function (domain, cb) {
+    if (domain === "sepelios.werchow.com") {
+      cb(null, secondContext);
+    } else {
+      cb();
+    }
+  },
 };
 
-app.use(morgan("dev"));
+// Routes
+const routesCW = require("./routes/clubwerchow");
+const routesSep = require("./routes/sepelios");
 
-// Configure your vhosts here
-app.use(
-  vhost(
-    "sepelios.werchow.com",
-    express()
-      .get("/", (req, res) =>
-        res.sendFile(__dirname + "/projects/example/index.html")
-      )
-      .get("/test", (req, res) => res.send("example test page"))
-      .use("/images", express.static("projects/example/images")) // example of static file
-  )
-);
+// Projects
 
-// localhost with directory listing
-app.use("/", express.static("projects"), serveIndex("projects"));
+const appFactory = () => {
+  const app = express();
 
-const httpServer = http.createServer(app);
-const httpsServer = https.createServer(
-  { key: privateKey, cert: certificate },
-  app
-);
+  app.use("/public", express.static(path.join(__dirname, "projects/public/")));
+  app.set("views", "/projects/clubwerchow/src/views/");
 
-httpServer.listen(80, () => console.log("Server listening on port 80."));
-httpsServer.listen(443, () => console.log("Server listening on port 443."));
+  app.use("/", routesCW);
+
+  return app;
+};
+
+const appFactory2 = () => {
+  const app = express();
+
+  app.use("/public", express.static(path.join(__dirname, "projects/public/")));
+  app.use("/", routesSep);
+
+  return app;
+};
+
+// Domains
+
+evh.register("sepelios.werchow.com", appFactory2());
+evh.register("clubwerchow.com", appFactory()); 
+
+// Servers
+
+app.use(evh.vhost(app.enabled("trust proxy")));
+
+http.createServer(options, app).listen(httpPort, () => {
+  console.log("http server listening on port " + httpPort);
+});
+
+https.createServer(options, app).listen(httpsPort, () => {
+  console.log("https server listening on port " + httpsPort);
+});
