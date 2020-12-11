@@ -7,7 +7,6 @@ const https = require("https");
 const fs = require("fs");
 const tls = require("tls");
 const bodyParser = require("body-parser");
-const expressValidator = require("express-validator");
 const expressSession = require("express-session");
 
 // CONFIGS
@@ -15,7 +14,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //app.use(expressValidator());
-app.use( 
+app.use(
   expressSession({ secret: "max", saveUninitialized: false, resave: false })
 );
 exphbs.registerPartials(path.join(__dirname, "/projects/partials"));
@@ -24,12 +23,12 @@ const httpPort = 2000;
 const httpsPort = 2001;
 
 const secondContext = tls.createSecureContext({
-  key: fs.readFileSync("certs/clubwerchow.key", "utf8"),
-  cert: fs.readFileSync("certs/clubwerchow.cert", "utf8"),
-});
-const options = {
   key: fs.readFileSync("certs/werchow.key", "utf8"),
   cert: fs.readFileSync("certs/werchow.cert", "utf8"),
+});
+const options = {
+  key: fs.readFileSync("certs/clubwerchow.key", "utf8"),
+  cert: fs.readFileSync("certs/clubwerchow.cert", "utf8"),
   SNICallback: function (domain, cb) {
     if (domain === "sepelios.werchow.com") {
       cb(null, secondContext);
@@ -38,6 +37,16 @@ const options = {
     }
   },
 };
+
+app.use(function (req, res, next) {
+  if (req.secure) {
+    // request was via https, so do no special handling
+    next();
+  } else {
+    // request was via http, so redirect to https
+    res.redirect("https://" + req.headers.host + req.url);
+  }
+});
 
 // Routes
 const routesCW = require("./routes/clubwerchow");
@@ -59,7 +68,7 @@ const appFactory = () => {
 const appFactory2 = () => {
   const app = express();
 
-  app.use("/public", express.static(path.join(__dirname, "projects/public/")));
+  app.use(express.static(path.join(__dirname, "projects/public/")));
   app.use("/", routesSep);
 
   return app;
@@ -68,7 +77,7 @@ const appFactory2 = () => {
 // Domains
 
 evh.register("sepelios.werchow.com", appFactory2());
-evh.register("clubwerchow.com", appFactory()); 
+evh.register("clubwerchow.com", appFactory());
 
 // Servers
 

@@ -10745,11 +10745,11 @@ body {
   padding: 15rem 0;
   background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.144) 60%,
-      rgba(0, 0, 0, 0.616) 70%,
+      rgba(0, 0, 0, 0.144) 90%,
+      rgba(0, 0, 0, 0.616) 95%,
       #000000 100%
     ),
-    url("../../public/img/sepelios/ba2.jpg");
+    url("../img/sepelios/ba2.jpg");
   background-position: center;
   /*background-repeat: no-repeat;
   */

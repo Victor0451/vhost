@@ -29,12 +29,23 @@ router.get("/conveniosprovinciales", async (req, res) => {
 });
 
 router.get("/conveniosnacionales", async (req, res) => {
-  res.render(
-    path.join(
-      __dirname,
-      "../projects/sepelios/src/views/conveniosnacionales.hbs"
-    )
-  );
+  await axios
+    .get("http://190.231.32.232:5002/api/clubwerchow/connac/convenios")
+    .then((listgrup) => {
+      let connac = listgrup.data;
+
+      res.render(
+        path.join(
+          __dirname,
+          "../projects/sepelios/src/views/conveniosnacionales.hbs"
+        ),
+        { connac }
+      );
+    })
+
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 router.get("/novell", async (req, res) => {
