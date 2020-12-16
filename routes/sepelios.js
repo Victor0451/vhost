@@ -51,4 +51,14 @@ router.get("/conveniosnacionales", async (req, res) => {
 router.get("/novell", async (req, res) => {
   res.render(path.join(__dirname, "../projects/sepelios/src/views/novell.hbs"));
 });
+
+router.get("/homenajesvirtuales", async (req, res) => {
+  res.render(
+    path.join(
+      __dirname,
+      "../projects/sepelios/src/views/homenajesvirtuales.hbs"
+    )
+  );
+});
+
 module.exports = router;

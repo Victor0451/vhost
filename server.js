@@ -22,16 +22,22 @@ exphbs.registerPartials(path.join(__dirname, "/projects/partials"));
 const httpPort = 2000;
 const httpsPort = 2001;
 
-const secondContext = tls.createSecureContext({
+const sepelioContext = tls.createSecureContext({
   key: fs.readFileSync("certs/werchow.key", "utf8"),
   cert: fs.readFileSync("certs/werchow.cert", "utf8"),
+});
+const grupoWerchowContext = tls.createSecureContext({
+  key: fs.readFileSync("certs/grupowerchow.key", "utf8"),
+  cert: fs.readFileSync("certs/grupowerchow.cert", "utf8"),
 });
 const options = {
   key: fs.readFileSync("certs/clubwerchow.key", "utf8"),
   cert: fs.readFileSync("certs/clubwerchow.cert", "utf8"),
   SNICallback: function (domain, cb) {
     if (domain === "sepelios.werchow.com") {
-      cb(null, secondContext);
+      cb(null, sepelioContext);
+    } else if (domain === "grupowerchow.com") {
+      cb(null, grupoWerchowContext);
     } else {
       cb();
     }
@@ -39,11 +45,24 @@ const options = {
 };
 
 app.use(function (req, res, next) {
-  if (req.secure) {
-    // request was via https, so do no special handling
+  // redirect .com.ar to .com
+
+  if (req.headers.host === "clubwerchow.com.ar") {
+    res.redirect("https://clubwerchow.com");
+  } else if (req.headers.host === "werchow.com") {
+    res.redirect("https://werchow.com.ar");
+  }
+  if (req.headers.host === "grupowerchow.com.ar") {
+    res.redirect("https://grupowerchow.com");
+  }
+
+  // request was via https, so do no special handling
+  else if (req.secure) {
     next();
-  } else {
-    // request was via http, so redirect to https
+  }
+  
+  // request was via http, redirect to https
+  else {
     res.redirect("https://" + req.headers.host + req.url);
   }
 });
@@ -51,6 +70,7 @@ app.use(function (req, res, next) {
 // Routes
 const routesCW = require("./routes/clubwerchow");
 const routesSep = require("./routes/sepelios");
+const routesGrup = require("./routes/grupowerchow");
 
 // Projects
 
@@ -74,10 +94,19 @@ const appFactory2 = () => {
   return app;
 };
 
-// Domains
+const appFactory3 = () => {
+  const app = express();
 
-evh.register("sepelios.werchow.com", appFactory2());
+  app.use(express.static(path.join(__dirname, "projects/public/")));
+  app.use("/", routesGrup);
+
+  return app;
+};
+
+// Domains
 evh.register("clubwerchow.com", appFactory());
+evh.register("sepelios.werchow.com", appFactory2());
+evh.register("grupowerchow.com", appFactory3());
 
 // Servers
 
