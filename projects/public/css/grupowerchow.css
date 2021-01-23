@@ -331,7 +331,7 @@ h6,
   --------------------------------------------------------------*/
 #hero {
   width: 100%;
-  height: 90vh;
+  height: 120vh;
   overflow: hidden;
   position: relative;
 }
@@ -343,12 +343,9 @@ h6,
   top: 0;
   width: 130%;
   height: 95%;
-  background: linear-gradient(
-      to right,
-      rgba(30, 67, 86, 0.8),
-      rgba(30, 67, 86, 0.6)
-    ),
-    url("../img/grupowerchow/hero-bg.jpg") center top no-repeat;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+    url("../img/grupowerchow/bannerppal.jpg") center top no-repeat;
+  background-size: 95% 100%;
   z-index: 0;
   border-radius: 0 0 50% 50%;
   transform: translateX(-50%) rotate(0deg);
@@ -361,8 +358,8 @@ h6,
   top: 0;
   width: 130%;
   height: 96%;
-  background: #68a4c4;
-  opacity: 0.3;
+  background: #002d72;
+
   z-index: 0;
   border-radius: 0 0 50% 50%;
   transform: translateX(-50%) translateY(18px) rotate(2deg);
@@ -578,11 +575,19 @@ section {
 /*--------------------------------------------------------------
   # Our Services
   --------------------------------------------------------------*/
+.logosempresas {
+  margin-top: 50px;
+  width: 100% !important;
+  height: 40% !important;
+}
+
 .services {
   padding-bottom: 20px;
 }
 
 .services .icon-box {
+  height: 300px;
+  width: 180px;
   padding: 30px;
   position: relative;
   overflow: hidden;
@@ -591,7 +596,7 @@ section {
   box-shadow: 0 5px 26px 0 rgba(68, 88, 144, 0.14);
   transition: all 0.3s ease-in-out;
   text-align: center;
-  border: 1px solid #fff;
+  border: 1px solid rgb(172, 171, 171);
 }
 
 .services .icon {
@@ -625,52 +630,82 @@ section {
   margin-bottom: 0;
 }
 
-.services .icon-box-pink .icon {
+.services .icon-box-salud .icon {
   background: #fceef3;
 }
 
-.services .icon-box-pink .icon i {
-  color: #ff689b;
+.services .icon-box-salud .icon i {
+  color: #28724f;
 }
 
-.services .icon-box-pink:hover {
-  border-color: #ff689b;
+.services .icon-box-salud:hover {
+  border-color: #28724f;
+  transform: scale(1.04);
 }
 
-.services .icon-box-cyan .icon {
+.services .icon-box-beneficios .icon {
   background: #e6fdfc;
 }
 
-.services .icon-box-cyan .icon i {
-  color: #3fcdc7;
+.services .icon-box-beneficios .icon i {
+  color: #94450b;
 }
 
-.services .icon-box-cyan:hover {
-  border-color: #3fcdc7;
+.services .icon-box-beneficios:hover {
+  border-color: #94450b;
+  transform: scale(1.04);
 }
 
-.services .icon-box-green .icon {
+.services .icon-box-club .icon {
   background: #eafde7;
 }
 
-.services .icon-box-green .icon i {
-  color: #41cf2e;
+.services .icon-box-club .icon i {
+  color: #0076ce;
 }
 
-.services .icon-box-green:hover {
-  border-color: #41cf2e;
+.services .icon-box-club:hover {
+  border-color: #0076ce;
+  transform: scale(1.04);
 }
 
-.services .icon-box-blue .icon {
+.services .icon-box-convenios .icon {
   background: #e1eeff;
 }
 
-.services .icon-box-blue .icon i {
-  color: #2282ff;
+.services .icon-box-convenios .icon i {
+  color: #bd9b60;
 }
 
-.services .icon-box-blue:hover {
-  border-color: #2282ff;
+.services .icon-box-convenios:hover {
+  border-color: #bd9b60;
+  transform: scale(1.04);
+}
+
+.services .icon-box-ventas .icon {
+  background: #e1eeff;
+}
+
+.services .icon-box-ventas .icon i {
+  color: #651c32;
+}
+
+.services .icon-box-ventas:hover {
+  border-color: #651c32;
+  transform: scale(1.04);
+}
+
+.services .icon-box-sepelios .icon {
+  background: #e1eeff;
+}
+
+.services .icon-box-sepelios .icon i {
+  color: #002d72;
+}
+
+.services .icon-box-sepelios:hover {
+  border-color: #002d72;
+  transform: scale(1.04);
 }
 
 /*--------------------------------------------------------------
