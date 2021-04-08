@@ -3,6 +3,8 @@ var router = express.Router();
 const axios = require("axios");
 const path = require("path");
 
+const config = require('../config/config')
+
 /* GET home page. */
 router.get("/", async (req, res) => {
   res.render(path.join(__dirname, "../projects/sepelios/src/views/index.hbs"));
@@ -10,7 +12,7 @@ router.get("/", async (req, res) => {
 
 router.get("/conveniosprovinciales", async (req, res) => {
   await axios
-    .get("http://190.231.32.232:5002/api/sepeliospag/grupos/grupos")
+    .get(`${config.ip}api/sepeliospag/grupos/grupos`)
     .then((listgrup) => {
       let grupos = listgrup.data;
 
@@ -30,7 +32,7 @@ router.get("/conveniosprovinciales", async (req, res) => {
 
 router.get("/conveniosnacionales", async (req, res) => {
   await axios
-    .get("http://190.231.32.232:5002/api/clubwerchow/connac/convenios")
+    .get(`${config.ip}api/clubwerchow/connac/convenios`)
     .then((listgrup) => {
       let connac = listgrup.data;
 

@@ -3,6 +3,7 @@ var router = express.Router();
 const axios = require("axios");
 const path = require("path");
 const { check, validationResult } = require("express-validator");
+const config = require('../config/config')
 
 /* GET home page. */
 router.get("/", async (req, res) => {
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
 
 router.get("/comerciosadheridos", async (req, res) => {
   await axios
-    .get("http://190.231.32.232:5002/api/clubwerchow/comercios/comercios")
+    .get(`${config.ip}api/clubwerchow/comercios/comercios`)
     .then((comercios) => {
       let comlist = comercios.data;
 
@@ -97,7 +98,7 @@ router.post(
 
       axios
         .post(
-          "http://190.231.32.232:5002/api/clubwerchow/socios/nuevasol",
+          `${config.ip}api/clubwerchow/socios/nuevasol`,
           solicitud
         )
         .then((res) => {

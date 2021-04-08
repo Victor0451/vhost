@@ -26,6 +26,12 @@ const sepelioContext = tls.createSecureContext({
   key: fs.readFileSync("certs/werchow.key", "utf8"),
   cert: fs.readFileSync("certs/werchow.cert", "utf8"),
 });
+
+const convenioContext = tls.createSecureContext({
+  key: fs.readFileSync("certs/werchow.key", "utf8"),
+  cert: fs.readFileSync("certs/werchow.cert", "utf8"),
+});
+
 const grupoWerchowContext = tls.createSecureContext({
   key: fs.readFileSync("certs/grupowerchow.key", "utf8"),
   cert: fs.readFileSync("certs/grupowerchow.cert", "utf8"),
@@ -38,7 +44,10 @@ const options = {
       cb(null, sepelioContext);
     } else if (domain === "grupowerchow.com") {
       cb(null, grupoWerchowContext);
-    } else {
+    } else if (domain === "convenios.werchow.com") {
+      cb(null, convenioContext);
+    }
+    else {
       cb();
     }
   },
@@ -60,7 +69,7 @@ app.use(function (req, res, next) {
   else if (req.secure) {
     next();
   }
-  
+
   // request was via http, redirect to https
   else {
     res.redirect("https://" + req.headers.host + req.url);
@@ -71,6 +80,7 @@ app.use(function (req, res, next) {
 const routesCW = require("./routes/clubwerchow");
 const routesSep = require("./routes/sepelios");
 const routesGrup = require("./routes/grupowerchow");
+const routesConv = require("./routes/convenios");
 
 // Projects
 
@@ -103,10 +113,20 @@ const appFactory3 = () => {
   return app;
 };
 
+const appFactory4 = () => {
+  const app = express();
+
+  app.use(express.static(path.join(__dirname, "projects/public/")));
+  app.use("/", routesConv);
+
+  return app;
+};
+
 // Domains
 evh.register("clubwerchow.com", appFactory());
 evh.register("sepelios.werchow.com", appFactory2());
 evh.register("grupowerchow.com", appFactory3());
+evh.register("convenios.werchow.com", appFactory4());
 
 // Servers
 
