@@ -61,9 +61,15 @@ app.use(function (req, res, next) {
   } else if (req.headers.host === "werchow.com") {
     res.redirect("https://werchow.com.ar");
   }
+
   if (req.headers.host === "grupowerchow.com.ar") {
     res.redirect("https://grupowerchow.com");
   }
+
+  if (req.headers.host === "sgi.werchow.com") {
+    res.redirect("http://sgi.werchow.com:3001");
+  }
+
 
   // request was via https, so do no special handling
   else if (req.secure) {
