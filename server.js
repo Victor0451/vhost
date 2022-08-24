@@ -23,29 +23,47 @@ const httpPort = 2000;
 const httpsPort = 2001;
 
 const sepelioContext = tls.createSecureContext({
-  key: fs.readFileSync("certs/werchow.key", "utf8"),
-  cert: fs.readFileSync("certs/werchow.cert", "utf8"),
+  key: fs.readFileSync("./certs/werchow.key", "utf8"),
+  cert: fs.readFileSync("./certs/werchow.cert", "utf8"),
 });
 
 const convenioContext = tls.createSecureContext({
-  key: fs.readFileSync("certs/werchow.key", "utf8"),
-  cert: fs.readFileSync("certs/werchow.cert", "utf8"),
+  key: fs.readFileSync("./certs/werchow.key", "utf8"),
+  cert: fs.readFileSync("./certs/werchow.cert", "utf8"),
 });
 
 const grupoWerchowContext = tls.createSecureContext({
-  key: fs.readFileSync("certs/grupowerchow.key", "utf8"),
-  cert: fs.readFileSync("certs/grupowerchow.cert", "utf8"),
+  key: fs.readFileSync("./certs/grupowerchow.key", "utf8"),
+  cert: fs.readFileSync("./certs/grupowerchow.cert", "utf8"),
 });
+
+const clubWerchowContext = tls.createSecureContext({
+  key: fs.readFileSync("./certs/clubwerchow.key", "utf8"),
+  cert: fs.readFileSync("./certs/clubwerchow.cert", "utf8"),
+});
+
 const options = {
-  key: fs.readFileSync("certs/clubwerchow.key", "utf8"),
-  cert: fs.readFileSync("certs/clubwerchow.cert", "utf8"),
+
   SNICallback: function (domain, cb) {
-    if (domain === "sepelios.werchow.com") {
+
+    //console.log(domain)
+
+    if (domain === "clubwerchow.com") {
+      
+      cb(null, clubWerchowContext);
+
+    } else if (domain === "sepelios.werchow.com") {
+
       cb(null, sepelioContext);
+
     } else if (domain === "grupowerchow.com") {
+
       cb(null, grupoWerchowContext);
+
     } else if (domain === "convenios.werchow.com") {
+
       cb(null, convenioContext);
+
     }
     else {
       cb();
@@ -57,17 +75,21 @@ app.use(function (req, res, next) {
   // redirect .com.ar to .com
 
   if (req.headers.host === "clubwerchow.com.ar") {
+
     res.redirect("https://clubwerchow.com");
+
   } else if (req.headers.host === "werchow.com") {
+
     res.redirect("https://werchow.com.ar");
-  }
 
-  if (req.headers.host === "grupowerchow.com.ar") {
+  } else if (req.headers.host === "grupowerchow.com.ar") {
+
     res.redirect("https://grupowerchow.com");
-  }
 
-  if (req.headers.host === "sgi.werchow.com") {
+  } else if (req.headers.host === "sgi.werchow.com") {
+
     res.redirect("http://sgi.werchow.com:3001");
+
   }
 
 
