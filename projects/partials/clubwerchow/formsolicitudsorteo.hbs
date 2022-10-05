@@ -1,0 +1,167 @@
+<form
+  class="container mt-4 border border-dark p-4 alert alert-secondary"
+  id="form"
+  action="/solisorteo"
+  method="POST"
+>
+  {{#if errors}}
+    <section
+      class="alert alert-danger text-dark text-uppercase border border-dark"
+    >
+      <ul>
+        {{#each errors}}
+          <li>
+            {{this.msg}}
+          </li>
+        {{/each}}
+      </ul>
+    </section>
+  {{/if}}
+  {{#if success}}
+    <div
+      class="alert alert-success border border-dark text-center text-dark text-uppercase"
+    >
+      Tu solicitud fue enviada y registrada con exito
+    </div>
+  {{/if}}
+  <div class="col-12">
+    <h3 class="heading text-center">
+      <u>Inscripcion al sorteo</u>: Datos Del Solicitante
+    </h3>
+    <div class="heading-underline"></div>
+  </div>
+  <div class="row mb-4">
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            Apellido:
+          </u>
+        </strong>
+      </label>
+      <input
+        type="text"
+        class="form-control border border-dark"
+        placeholder="Apellido"
+        name="apellido"
+        value="{{form.apellido}}"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            Nombre:
+          </u>
+        </strong>
+      </label>
+      <input
+        type="text"
+        class="form-control border border-dark"
+        placeholder="Nombre"
+        name="nombre"
+        value="{{form.nombre}}"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            DNI:
+          </u>
+        </strong>
+      </label>
+      <input
+        type="number"
+        class="form-control border border-dark"
+        placeholder="DNI"
+        name="dni"
+        value="{{form.dni}}"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            Obra Social:
+          </u>
+        </strong>
+      </label>
+      <input
+        type="text"
+        class="form-control border border-dark"
+        placeholder="Obra Social"
+        name="obrasoc"
+        value="{{form.obrasoc}}"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            Mail:
+          </u>
+        </strong>
+      </label>
+      <input
+        type="text"
+        class="form-control border border-dark"
+        placeholder="Mail"
+        name="mail"
+        value="{{form.mail}}"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            Telefono:
+          </u>
+        </strong>
+      </label>
+      <input
+        type="number"
+        class="form-control border border-dark"
+        placeholder="Telefono"
+        name="telefono"
+        value="{{form.telefono}}"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label>
+        <strong>
+          <u>
+            Usted es:
+          </u>
+        </strong>
+      </label>
+      <select
+        class="custom-select border border-dark"
+        name="es"
+        value="{{form.es}}"
+      >
+        <option value="" selected>
+          Seleccione una opcion
+        </option>
+        <option value="1">
+          Afiliado de Werchow
+        </option>
+        <option value="2">
+          No es afiliado a Werchow
+        </option>
+        <option value="3">
+          Es conocido o pariente de un afiliado de werchow (Referido)
+        </option>
+      </select>
+    </div>
+    <div class="form-group col-md-12 mt-4">
+      <button
+        class="btn btn-secondary btn-md mt-4 mb-4 btn-block"
+        data-toggle="modal"
+        data-target=".modlist"
+      >
+        Enviar Solicitud
+      </button>
+    </div>
+  </div>
+</form>

@@ -50,6 +50,22 @@ router.get("/solicitudtarjeta", async (req, res) => {
   req.session.errors = null;
 });
 
+router.get("/solicitudsorteo", async (req, res) => {
+  res.render(
+    path.join(
+      __dirname,
+      "../projects/clubwerchow/src/views/solicitudsorteo.hbs"
+    ),
+
+    {
+      errors: req.session.errors,
+      success: req.session.success,
+      form: req.session.form,
+    }
+  );
+  req.session.errors = null;
+});
+
 router.get("/ganadoressorteo", async (req, res) => {
   res.render(
     path.join(
@@ -111,6 +127,65 @@ router.post(
       req.session.form = {};
     }
     res.redirect("/solicitudtarjeta");
+  }
+);
+
+router.post(
+  "/solisorteo",
+  [
+    check("dni").notEmpty().withMessage("El DNI es obligatorio"),
+    check("dni")
+      .isLength({ max: 9, min: 7 })
+      .withMessage("El DNI debe tener entre 7 y 9 caracteres"),
+    check("apellido").notEmpty().withMessage("El apellido es obligatorio"),
+    check("nombre").notEmpty().withMessage("El nombre es obligatorio"),
+    check("mail").notEmpty().withMessage("El mail es obligatorio"),
+    check("mail")
+      .isEmail()
+      .withMessage("El mail debe tener el siguiente formato user@mail.com"),
+    check("telefono").notEmpty().withMessage("El telefono es obligatorio"),
+    check("es")
+      .notEmpty()
+      .withMessage("Debes identificarte eligiendo una opcion"),
+    check("obrasoc")
+      .notEmpty()
+      .withMessage("Debes ingresar tu obra social"),
+  ],
+
+  (req, res) => {
+    let solicitud = {
+      apellido: req.body.apellido,
+      nombre: req.body.nombre,
+      dni: req.body.dni,
+      mail: req.body.mail,
+      telefono: req.body.telefono,
+      obrasoc: req.body.obrasoc,
+      es: req.body.es,
+    };
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.session.errors = errors.errors;
+      req.session.success = false;
+      req.session.form = solicitud;
+    } else {
+      req.session.success = true;
+
+      axios
+        .post(
+          `${config.ip}api/clubwerchow/socios/solisorteo`,
+          solicitud
+        )
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      req.session.form = {};
+    }
+    res.redirect("/solicitudsorteo");
   }
 );
 
